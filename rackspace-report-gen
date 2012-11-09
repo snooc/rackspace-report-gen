@@ -1,0 +1,52 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'colorize'
+
+# File containing the report
+if ARGV[0]
+  report_file = ARGV[0]
+else
+  puts "*** ".green + "YOU MUST SPECIFY A FILE.  eg: rs-report-gen foo.txt".red + " ***".green
+  exit
+end
+
+# Constants for conversions
+GIGABYTE_TO_KILOBTYE = 1048576
+MEGABYTE_TO_KILOBTYE = 1024
+KILOBYTE_TO_KILOBTYE = 1
+
+UNIT_TABLE = {
+  K: KILOBYTE_TO_KILOBTYE,
+  M: MEGABYTE_TO_KILOBTYE,
+  G: GIGABYTE_TO_KILOBTYE
+}
+
+# Parse file sizes and put into array for sorting
+sorted = []
+File.open(report_file).each do |line|
+  parsed = line.split('	')
+  
+  size = parsed[0][0..-1].to_i
+  unit = parsed[0][-1,1]
+  
+  size_in_kilobytes = UNIT_TABLE[unit.to_sym] * size
+  
+  sorted << {
+    folder: parsed[1],
+    size: size_in_kilobytes,
+    unit: unit,
+    size_raw: parsed[0]
+  }
+end
+
+sorted.sort! { |a, b| a[:size] <=> b[:size] }
+
+puts "---------------------------------------------------------------------------------------------------".blue
+puts "  Found #{sorted.count.to_s.red} folders"
+puts "---------------------------------------------------------------------------------------------------".blue
+
+sorted.each do |f|
+  printf "%-20s %-25s %s\n", f[:size_raw].to_s.green, f[:size].to_s.red, f[:folder]
+end
+
+puts "---------------------------------------------------------------------------------------------------\n".blue  
