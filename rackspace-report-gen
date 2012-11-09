@@ -39,6 +39,7 @@ File.open(report_file).each do |line|
   }
 end
 
+# This is done this way so that you can quickly sort biggest to smallest.
 sorted.sort! { |a, b| a[:size] <=> b[:size] }
 
 puts "---------------------------------------------------------------------------------------------------".blue
