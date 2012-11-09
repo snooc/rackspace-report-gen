@@ -9,7 +9,8 @@ This is what I wrote this! It take in the input, parses each line, converts ever
 This saved me a lot of time and could be used to find many other things...like how many backup directors you have, etc.
 
 ## Installation
-
+    
+    $ chmod +x rackspace-report-gen
     $ bundle install
 
 ## Using
